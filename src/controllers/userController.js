@@ -98,7 +98,7 @@ export default class UserController {
 
   mailRegister = async (req, res) => {
     try {
-      const user = await api.getOne(req.session.passport.user);
+      const user = await this.userServices.getByMail(req.session.user.email);
 
       let nombre = user.nombre;
       let apellido = user.apellido;
