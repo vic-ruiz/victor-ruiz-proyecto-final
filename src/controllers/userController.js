@@ -33,7 +33,7 @@ export default class UserController{
           if (!email || !password) {
             return res.status(401).json({ message: "Complete los datos" });
           }
-          const user = await this.servicesUser.getByMail(email);
+          const user = await this.userServices.getByMail(email);
           let isValid = false;
           if (user !== null) {
             isValid = await comparePassword(password, user.password);
@@ -43,17 +43,15 @@ export default class UserController{
               .status(401)
               .redirect('/api/users/errorLogin');
           }
-          req.session.user = user;
-          const token = await generateToken(user);
-          // pongo esta logica para usar las vistas en EJS:
-          console.log(token)
-          res.status(200).redirect('/api/productos') 
-          // pero esto es lo que le deberia pasar al fron cuando lo tengamos creado:
-    /*       res.json({
-            name: user.name,
-            email: user.email,
-            token,
-          }); */
+          const userAuthenticated = await this.userService.userLogin(
+            email,
+            password
+          );
+          const { token } = userAuthenticated;
+          res.cookie("token", token, { maxAge: 60 * 60 * 60 * 600, path: "/" });
+          res.cookie("email", email, { maxAge: 60 * 60 * 60 * 600, path: "/" });
+          res.status(201).json(userAuthenticated);
+
         } catch (error) {
           console.log(error);
           res.status(500).json({ message: "Error de servidor." });
