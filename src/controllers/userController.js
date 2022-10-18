@@ -41,7 +41,7 @@ export default class UserController{
           if (!isValid) {
             return res
               .status(401)
-              .redirect('//users/errorLogin');
+              .redirect('/users/errorLogin');
           }
           const userAuthenticated = await this.userService.userLogin(
             email,
@@ -61,6 +61,38 @@ export default class UserController{
       errorLogin = async (req, res) => {
         try {
           res.status(200).render("errorLogin");
+        } catch (err) {
+          res.status(500).json({ message: err.message });
+        }
+      };
+
+      getRegister = async (req, res) => {
+        try {
+          res.status(200).render("register");
+        } catch (err) {
+          res.status(500).json({ message: err.message });
+        }
+      };
+
+      postRegistro = async (req, res) => {
+        try {
+          const newUser = req.body;
+          const exist = await this.userServices.getByMail(newUser.email);
+          if (exist) {
+            res.status(401).redirect('/users/errorRegister');
+          } else {
+           newRegister = await this.userServices.createUser(newUser)
+            res.status(200).redirect("/users/register");
+          }
+        } catch (error) {
+          console.log(error);
+          res.status(500).json({ error_description: "Error en el servidor." });
+        }
+      };
+    
+      errorRegister = async (req, res) => {
+        try {
+          res.status(200).render("errorRegister");
         } catch (err) {
           res.status(500).json({ message: err.message });
         }

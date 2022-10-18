@@ -26,7 +26,7 @@ export default class UserServices {
     }
   }
 
-  async userLogin (email, password) {
+  async userLogin(email, password) {
     const user = await this.userDao.getByMail(email);
     if (!user) {
       throw new Error("No existe el usuario");
@@ -35,10 +35,19 @@ export default class UserServices {
     if (!verifyPassword) {
       throw new Error("Contraseña incorrecta");
     }
-    const token = await generateJWT(user);
+    const token = await generateToken(user);
     return {
       user,
       token,
     };
-  };
+  }
+
+  async getByMail(mail) {
+    try {
+      const user = await this.userDao.getByMail(mail);
+      return user;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
 }
