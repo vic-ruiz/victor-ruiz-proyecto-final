@@ -41,7 +41,7 @@ export default class UserController{
           if (!isValid) {
             return res
               .status(401)
-              .redirect('/api/users/errorLogin');
+              .redirect('//users/errorLogin');
           }
           const userAuthenticated = await this.userService.userLogin(
             email,
@@ -55,6 +55,14 @@ export default class UserController{
         } catch (error) {
           console.log(error);
           res.status(500).json({ message: "Error de servidor." });
+        }
+      };
+
+      errorLogin = async (req, res) => {
+        try {
+          res.status(200).render("errorLogin");
+        } catch (err) {
+          res.status(500).json({ message: err.message });
         }
       };
 }
