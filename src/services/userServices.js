@@ -7,7 +7,7 @@ export default class UserServices {
     this.userDao = new UserDao();
   }
 
-  async userSave(user) {
+  async saveUser(user) {
     try {
       const { nombre, apellido, email, password, phone } = user;
       const encryptedPassword = await encryptPassword(password);

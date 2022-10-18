@@ -9,16 +9,6 @@ export default class UserController {
     this.userServices = new UserServices();
   }
 
-  createUser = async (req, res) => {
-    try {
-      const dataUser = req.body;
-      const user = await this.userService.userSave(dataUser);
-      res.status(200).json({ message: "usuario creado con exito", user });
-    } catch (error) {
-      res.status(500).json({ message: "Error al crear el usuario", error });
-    }
-  };
-
   getLogin = async (req, res) => {
     try {
       res.status(200).render("login");
@@ -79,7 +69,7 @@ export default class UserController {
       if (exist) {
         res.status(401).redirect("/users/errorRegister");
       } else {
-        newRegister = await this.userServices.createUser(newUser);
+        newRegister = await this.userServices.saveUser(newUser);
         res.status(200).redirect("/users/register");
       }
     } catch (error) {
@@ -131,5 +121,17 @@ export default class UserController {
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
+  };
+
+  logoutSession = async (req, res) => {
+    const nombre = req.session.nombre;
+    res.render("logout", { nombre });
+    req.session.destroy((err) => {
+      if (!err) {
+        console.log("Session destroyed");
+      } else {
+        res.send({ status: "Error" });
+      }
+    });
   };
 }
