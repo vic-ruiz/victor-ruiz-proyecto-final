@@ -1,10 +1,12 @@
 import express from "express";
 import indexRouter from "./routes/indexRoutes.js";
 import { connectMongoDB } from "./persistence/configMongoDB.js";
+import session from "express-session";
 import MongoStore from "connect-mongo";
 import morgan from "morgan";
 import cluster from "cluster";
 import os from "os";
+
 
 
 const PORT = process.env.PORT || 8080;
@@ -39,16 +41,11 @@ if (cluster.isPrimary && MODO === "cluster") {
     })
   );
 
-  app.use(passport.initialize());
-  app.use(passport.session());
 
   app.set("views", "./src/views");
   app.set("view engine", "ejs");
 
   app.use("/", indexRouter);
-  app.get("/", (req, res) => {
-    res.redirect("/register");
-  });
 
   const server = app.listen(PORT, () => {
     console.log(` 🚀 Server started at http://localhost:${PORT}

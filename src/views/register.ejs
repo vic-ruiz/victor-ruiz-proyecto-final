@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body class="container">
+    <div class="row m-3 justify-content-around">
+        <div class="col-5 card">
+            <h1 class="p-3">Registro</h1>
+            <form class="col-12 p-3 " action="/register" method="post">
+                <input type="text" name="nombre" placeholder="Ingresa tu nombre"></input>
+                <input type="text" name="apellido" placeholder="Ingresa tu apellido"></input>
+                <input type="email" name="email" placeholder="Ingresa tu email"></input>
+                <input type="password" name="password" placeholder="Ingresa tu contraseña"></input>
+                <input type="number" name="phone" placeholder="Ingresa tu telefono"></input>
+                <button>Registrarse</button>
+            </form>
+        </div>
+        <div class="col-5 card">
+            <h2>Ya tienes un usuario?</h2>
+            <button onclick="location.href='/login'" class="button is-primary mt-3">Go to login</button>
+        </div>
+    </div>
+
+    
+</body>
+
+</html>

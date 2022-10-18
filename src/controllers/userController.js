@@ -1,4 +1,4 @@
-import UserServices from "../services/userServices";
+import UserServices from "../services/userServices.js";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 
@@ -59,18 +59,27 @@ export default class UserController {
       res.status(200).render("register");
     } catch (err) {
       res.status(500).json({ message: err.message });
+      console.log(err)
     }
   };
 
   postRegister = async (req, res) => {
     try {
       const newUser = req.body;
+      console.log(newUser);
       const exist = await this.userServices.getByMail(newUser.email);
       if (exist) {
         res.status(401).redirect("/users/errorRegister");
       } else {
-        newRegister = await this.userServices.saveUser(newUser);
-        res.status(200).redirect("/users/register");
+        const newRegister = await this.userServices.saveUser(newUser);
+        console.log(newRegister.nombre)
+        req.session.user = {
+          email: newRegister.email,
+          nombre: newRegister.nombre,
+          apellido: newRegister.apellido,
+          id: newRegister._id,
+        };
+        res.status(200).redirect("/mailRegister");
       }
     } catch (error) {
       console.log(error);
@@ -117,7 +126,7 @@ export default class UserController {
         html: htmlTemplate,
       });
 
-      res.status(200).redirect("/api/main");
+      res.status(200).redirect("/register");
     } catch (err) {
       res.status(500).json({ message: err.message });
     }

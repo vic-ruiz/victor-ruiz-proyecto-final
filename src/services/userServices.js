@@ -1,6 +1,6 @@
-import UserDao from "../persistence/daos/usersDao";
-import { encryptPassword, comparePassword } from "../utils/bcrypt/bcrypt";
-import generateToken from "../utils/jwt/generateJwt";
+import UserDao from "../persistence/daos/usersDao.js";
+import { encryptPassword, comparePassword } from "../utils/bcrypt/bcrypt.js";
+import generateToken from "../utils/jwt/generateJwt.js";
 
 export default class UserServices {
   constructor() {
@@ -19,7 +19,7 @@ export default class UserServices {
         phone,
       };
       const newUser = await this.userDao.saveUser(userEncrypt);
-      await sendMailRegister(userEncrypt);
+      console.log(newUser);
       return newUser;
     } catch (error) {
       throw new Error("error: ", error);

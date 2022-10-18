@@ -2,13 +2,12 @@ import User from "../models/UsersSchema.js";
 
 export default class UserDao {
   constructor() {
-    this.userModel = new User();
+    this.userModel = User;
   }
 
   async saveUser(user) {
     try {
-      const newUser = new this.userModel(user);
-      await newUser.save();
+      const newUser = await this.userModel.create(user);
       return newUser;
     } catch (error) {
       throw new Error("Error al guardar el usuario", error);
