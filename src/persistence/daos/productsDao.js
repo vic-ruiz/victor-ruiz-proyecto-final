@@ -8,6 +8,7 @@ export default class ProductsDao {
   async getAll() {
     try {
       const products = await this.productsModel.find({});
+      console.log(products)
       return products;
     } catch (error) {
       console.log("error: ", error);

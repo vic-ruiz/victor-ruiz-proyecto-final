@@ -23,26 +23,19 @@ export default class UserController {
       if (!email || !password) {
         return res.status(401).json({ message: "Complete los datos" });
       }
-      const user = await this.userServices.getByMail(email);
-      let isValid = false;
-      if (user !== null) {
-        isValid = await comparePassword(password, user.password);
-      }
-      if (!isValid) {
-        return res.status(401).redirect("/users/errorLogin");
-      }
-      const userAuthenticated = await this.userService.userLogin(
+      const userAuthenticated = await this.userServices.userLogin(
         email,
         password
       );
+      
+      const { user, token } = userAuthenticated;
       req.session.user = user;
-      const { token } = userAuthenticated;
       res.cookie("token", token, { maxAge: 60 * 60 * 60 * 600, path: "/" });
       res.cookie("email", email, { maxAge: 60 * 60 * 60 * 600, path: "/" });
-      res.status(201).json(userAuthenticated);
+      res.status(201).redirect("main");
     } catch (error) {
       console.log(error);
-      res.status(500).json({ message: "Error de servidor." });
+      res.status(500).redirect("errorLogin");
     }
   };
 
@@ -69,7 +62,7 @@ export default class UserController {
       console.log(newUser);
       const exist = await this.userServices.getByMail(newUser.email);
       if (exist) {
-        res.status(401).redirect("/users/errorRegister");
+        res.status(401).redirect("/errorRegister");
       } else {
         const newRegister = await this.userServices.saveUser(newUser);
         console.log(newRegister.nombre)
@@ -83,7 +76,7 @@ export default class UserController {
       }
     } catch (error) {
       console.log(error);
-      res.status(500).json({ error_description: "Error en el servidor." });
+      res.status(500).redirect("/errorRegister");
     }
   };
 
@@ -133,7 +126,7 @@ export default class UserController {
   };
 
   logoutSession = async (req, res) => {
-    const nombre = req.session.nombre;
+    const nombre = req.session.user.nombre;
     res.render("logout", { nombre });
     req.session.destroy((err) => {
       if (!err) {
@@ -143,4 +136,14 @@ export default class UserController {
       }
     });
   };
+
+  mainViewer =  async(req, res) => {
+    try {
+      res.status(200).render("main");
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  };
+
+ 
 }

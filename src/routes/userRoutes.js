@@ -13,7 +13,7 @@ userRouter.post("/register", userController.postRegister);
 userRouter.get("/errorRegister", userController.errorRegister);
 userRouter.get('/mailRegister', userController.mailRegister);
 
-
+userRouter.get('/main', userController.mainViewer)
 userRouter.get("/logout", userController.logoutSession);
 
 

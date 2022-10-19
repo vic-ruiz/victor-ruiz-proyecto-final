@@ -8,6 +8,7 @@ export default class ProductsController {
   getProducts = async (req, res) => {
     try {
       const products = await this.productsServices.getAll();
+      console.log(products.toString())
       products
         ? res.status(200).json(products)
         : res.status(404).json({ message: "No products available" });
@@ -57,7 +58,7 @@ export default class ProductsController {
     }
   };
 
-  async deleteProduct(req, res) {
+  deleteProduct = async (req, res) => {
     try {
       const id = req.params.id;
       const deletedProduct = await this.productsServices.deleteProduct(id);
@@ -68,9 +69,9 @@ export default class ProductsController {
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
-  }
+  };
 
-  async updateProduct(req, res) {
+  updateProduct = async (req, res) => {
     try {
       const id = req.params.id;
       const productData = req.body;
@@ -85,5 +86,7 @@ export default class ProductsController {
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
-  }
+  };
+
+
 }
