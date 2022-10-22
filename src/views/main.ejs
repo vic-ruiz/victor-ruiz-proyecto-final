@@ -24,6 +24,41 @@
       </div>
     </div>
 
+    <div class="container-fluid">
+
+      <div>
+        <h3 class="fw-bold email"><%= email %></h1>
+      </div>
+
+      <div class="chat pt-4 mb-2">
+        <h2 class="mb-4 mt-4">Chat</h2>
+        <form class="chat-form">
+          <div class="chat-messages mb-3"></div>
+
+          <div class="row">
+            <div class="mb-3 col-auto">
+              <input
+                class="form-control"
+                type="text"
+                name="message"
+                id="message"
+                required
+                placeholder="Ingrese un mensaje..."
+              />
+            </div>
+
+            <div class="col-auto">
+              <button class="btn btn-primary btn-message" type="submit">Enviar!</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <%- include('./partials/footer') %>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/chat.js"></script>
+    
   </body>
 </html>

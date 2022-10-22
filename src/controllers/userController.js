@@ -139,7 +139,8 @@ export default class UserController {
 
   mainViewer =  async(req, res) => {
     try {
-      res.status(200).render("main");
+      const email = req.session.user.email;
+      res.status(200).render("main",{ email });
     } catch (err) {
       res.status(500).json({ message: err.message });
     }

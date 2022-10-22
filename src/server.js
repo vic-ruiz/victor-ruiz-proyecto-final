@@ -1,4 +1,6 @@
+import http from "http";
 import express from "express";
+import { Server } from "socket.io";
 import indexRouter from "./routes/indexRoutes.js";
 import { connectMongoDB } from "./persistence/configMongoDB.js";
 import session from "express-session";
@@ -6,8 +8,9 @@ import MongoStore from "connect-mongo";
 import morgan from "morgan";
 import cluster from "cluster";
 import os from "os";
-
-
+import socket from "./utils/socket/socket.js";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
 
 const PORT = process.env.PORT || 8080;
 const MODO = process.env.MODO || "fork";
@@ -25,7 +28,11 @@ if (cluster.isPrimary && MODO === "cluster") {
   });
 } else {
   const app = express();
+  const httpServer = http.createServer(app);
+  const io = new Server(httpServer);
   connectMongoDB();
+  socket(io);
+
   app.use(morgan("dev"));
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
@@ -41,7 +48,8 @@ if (cluster.isPrimary && MODO === "cluster") {
     })
   );
 
-
+  const __dirname = dirname(fileURLToPath(import.meta.url));
+  app.use(express.static(__dirname + "/public"));
   app.set("views", "./src/views");
   app.set("view engine", "ejs");
 
@@ -50,7 +58,7 @@ if (cluster.isPrimary && MODO === "cluster") {
     res.redirect("/register");
   });
 
-  const server = app.listen(PORT, () => {
+  const server = httpServer.listen(PORT, () => {
     console.log(` 🚀 Server started at http://localhost:${PORT}
                   🧑‍🔧 Worker PID: ${process.pid}. 
                   🧑‍💻 MODO: ${MODO}.`);
