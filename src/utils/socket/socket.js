@@ -9,12 +9,14 @@ export default (io) => {
     io.sockets.emit("messages", await chatDao.listMessages());
 
     socket.on("message", async (data) => {
+      console.log(data);
       const { text, email } = data;
       const newMessage = {
         email,
         text,
-        date: moment(new Date()).format("DD/MM/YYYY HH:mm"),
+        date: new Date().toString(),
       };
+      console.log(newMessage);
 
       await chatDao.newMessage(newMessage);
 

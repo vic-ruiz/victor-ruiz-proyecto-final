@@ -23,9 +23,10 @@ export default class MessageDao {
 
   async newMessage (message) {
     try {
-      const newMessage = new this.messageModel.create(message);
+      const newMessage = await this.messageModel.create(message);
       return newMessage;
     } catch (error) {
+      console.log(error)
       throw new Error("No se pudo guardar el mensaje", error);
     }
   };
