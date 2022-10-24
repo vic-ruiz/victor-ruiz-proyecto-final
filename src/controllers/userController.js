@@ -27,12 +27,12 @@ export default class UserController {
         email,
         password
       );
-      
+
       const { user, token } = userAuthenticated;
-      console.log(user)
-      console.log(token)
-      req.session.user = user;  
-      res.cookie("token", token, { maxAge: 60 , path: "/" });
+      console.log(user);
+      console.log(token);
+      req.session.user = user;
+      res.cookie("token", token, { maxAge: 60, path: "/" });
       res.cookie("email", email, { maxAge: 60, path: "/" });
       res.status(201).redirect("main");
     } catch (error) {
@@ -54,7 +54,7 @@ export default class UserController {
       res.status(200).render("register");
     } catch (err) {
       res.status(500).json({ message: err.message });
-      console.log(err)
+      console.log(err);
     }
   };
 
@@ -67,7 +67,7 @@ export default class UserController {
         res.status(401).redirect("/errorRegister");
       } else {
         const newRegister = await this.userServices.saveUser(newUser);
-        console.log(newRegister.nombre)
+        console.log(newRegister.nombre);
         req.session.user = {
           email: newRegister.email,
           nombre: newRegister.nombre,
@@ -128,25 +128,28 @@ export default class UserController {
   };
 
   logoutSession = async (req, res) => {
-    const nombre = req.session.user.nombre;
-    res.render("logout", { nombre });
-    req.session.destroy((err) => {
-      if (!err) {
-        console.log("Session destroyed");
-      } else {
-        res.send({ status: "Error" });
-      }
-    });
-  };
-
-  mainViewer =  async(req, res) => {
     try {
-      const email = req.session.user.email;
-      res.status(200).render("main",{ email });
-    } catch (err) {
-      res.status(500).json({ message: err.message });
+      const nombre = req.session.user.nombre;
+      res.render("logout", { nombre });
+      req.session.destroy((err) => {
+        if (!err) {
+          console.log("Session destroyed");
+        } else {
+          res.redirect("register");
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).redirect("/register");
     }
   };
 
- 
+  mainViewer = async (req, res) => {
+    try {
+      const email = req.session.user.email;
+      res.status(200).render("main", { email });
+    } catch (err) {
+      res.status(500).redirect("/register");
+    }
+  };
 }
