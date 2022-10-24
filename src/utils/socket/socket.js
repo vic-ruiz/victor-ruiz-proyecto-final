@@ -19,6 +19,7 @@ export default (io) => {
       console.log(newMessage);
 
       await chatDao.newMessage(newMessage);
+      console.log(await chatDao.listMessages())
 
       io.sockets.emit("messages", await chatDao.listMessages());
     });

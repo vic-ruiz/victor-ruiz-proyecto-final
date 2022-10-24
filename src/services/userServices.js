@@ -36,6 +36,7 @@ export default class UserServices {
       throw new Error("Contraseña incorrecta");
     }
     const token = await generateToken(user);
+    console.log(token)
     return {
       user,
       token,

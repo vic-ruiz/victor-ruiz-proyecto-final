@@ -1,45 +1,31 @@
 const socket = io();
 
-const chatForm = document.querySelector('.chat-form');
+const chatForm = document.querySelector(".chat-form");
 const chatMessageInput = chatForm.querySelector('[name="message"]');
-const messagesView = document.querySelector('.chat-messages');
-const email = document.querySelector('.email');
+const messagesView = document.querySelector(".chat-messages");
+const email = document.querySelector(".email");
 
-chatForm.addEventListener('submit', (event) => {
+chatForm.addEventListener("submit", (event) => {
   event.preventDefault();
-  console.log("estoy aqui")
+  console.log("estoy aqui");
   const message = {
     text: chatMessageInput.value,
     email: email.textContent,
   };
-  socket.emit('message', message);
-  chatMessageInput.value = '';
+  socket.emit("message", message);
+  chatMessageInput.value = "";
 });
 
-const messagesTemplate = Handlebars.compile(`
-  {{#if messagesExists}}
-    {{#each messages}}
-      <div class="message-item">
-        <span class="email">{{this.email}}</span>
-        <span>
-          [<span class="date">{{this.date}}</span>]:
-        </span>
-        <span class="message">{{this.text}}</span>
-        <br>
-        <span class="message">response: {{this.response}}</span>
-        <hr>
-      </div>
-    {{/each}}
-  {{/if}}
-`);
 
-function renderMessages(messages = []) {
-  const html = messagesTemplate({
-    messages,
-    messagesExists: !!messages.length,
-  });
-  messagesView.innerHTML = html;
-  messagesView.scrollTop = messagesView.scrollHeight;
-}
 
-socket.on('messages', renderMessages);
+socket.on("messages", (data) => {
+  const html = data.map((message) => {
+    return `<div class="card col-2">
+    <div>${message.email}</div>
+    <div>${message.text}</div>
+    <div>${message.date} </div>
+    </div>`;
+    })
+    .join(" ");
+    messagesView.innerHTML = html;
+});

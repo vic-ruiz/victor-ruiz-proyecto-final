@@ -29,9 +29,11 @@ export default class UserController {
       );
       
       const { user, token } = userAuthenticated;
-      req.session.user = user;
-      res.cookie("token", token, { maxAge: 60 * 60 * 60 * 600, path: "/" });
-      res.cookie("email", email, { maxAge: 60 * 60 * 60 * 600, path: "/" });
+      console.log(user)
+      console.log(token)
+      req.session.user = user;  
+      res.cookie("token", token, { maxAge: 60 , path: "/" });
+      res.cookie("email", email, { maxAge: 60, path: "/" });
       res.status(201).redirect("main");
     } catch (error) {
       console.log(error);
